@@ -21,7 +21,7 @@ jobs:
     - name: Cache conda packages
       uses: actions/cache@v3 # Using the latest version
       with:
-        path: ~/.conda/envs/wine_example_env
+        path: ~/.conda/envs/venv
         key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
         restore-keys: |
           ${{ runner.os }}-conda-
@@ -38,6 +38,9 @@ jobs:
       run: conda info
 
     - name: Run MLFlow
+      shell: bash -l {0}
       run: |
+        conda init bash
+        source ~/.bashrc
         conda activate venv
         mlflow run wine_example
