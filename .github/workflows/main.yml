@@ -3,7 +3,17 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  CSV_URL: "http://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv"
+  TARGET_VAR: "quality"
+  ALPHA: 0.9
+  L1_RATIO: 0.9
+  RANDOM_STATE: 42
 
 jobs:
   build:
@@ -22,7 +32,7 @@ jobs:
       uses: actions/cache@v3 # Using the latest version
       with:
         path: ~/.conda/envs/venv
-        key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+        key: ${{ runner.os }}-conda-${{ hashFiles('wine_example/environment.yml') }}
         restore-keys: |
           ${{ runner.os }}-conda-
 
@@ -40,7 +50,6 @@ jobs:
     - name: Run MLFlow
       shell: bash -l {0}
       run: |
-        conda init bash
-        source ~/.bashrc
+        source /usr/share/miniconda/etc/profile.d/conda.sh
         conda activate venv
         mlflow run wine_example
