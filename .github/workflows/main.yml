@@ -31,7 +31,7 @@ jobs:
       with:
         python-version: 3.8
         activate-environment: venv
-        environment-file: wine_example\environment.yml
+        environment-file: wine_example/environment.yml
         auto-update-conda: true
 
     - name: Verify conda installation
