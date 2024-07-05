@@ -1,0 +1,13 @@
+name: wine_example_env
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+      - mlflow
+      - scikit-learn
+      - pandas
+      - numpy
+      - matplotlib

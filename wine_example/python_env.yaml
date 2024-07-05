@@ -1,7 +1,0 @@
-python: '3.9'
-build_dependencies:
-- pip
-dependencies:
-- scikit-learn
-- mlflow
-- pandas
