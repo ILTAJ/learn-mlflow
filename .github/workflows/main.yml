@@ -31,7 +31,7 @@ jobs:
       with:
         python-version: 3.8
         activate-environment: wine_example_env
-        environment-file: conda_env.yml
+        environment-file: environment.yml
         auto-update-conda: true
 
     - name: Verify conda installation
@@ -39,5 +39,5 @@ jobs:
 
     - name: Run MLFlow
       run: |
-        conda activate wine_example_env
+        conda activate venv
         mlflow run wine_example
