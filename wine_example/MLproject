@@ -1,6 +1,6 @@
-name: gus_tutorial
+name: mlflow_ci
 
-python_env: python_env.yaml
+conda_env: environment.yml
 
 entry_points:
   main:
