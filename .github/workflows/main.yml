@@ -1,21 +1,9 @@
-
-
 name: CI
 
 on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
-
-env:
-  CSV_URL: "http://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv"
-  TARGET_VAR: "quality"
-  ALPHA: 0.9
-  L1_RATIO: 0.9
-  RANDOM_STATE: 42
 
 jobs:
   build:
@@ -23,19 +11,27 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4 # Updated to the latest version
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4 # Updated to the latest version
       with:
         python-version: 3.8
 
+    - name: Cache conda packages
+      uses: actions/cache@v3 # Using the latest version
+      with:
+        path: ~/.conda/envs/wine_example_env
+        key: ${{ runner.os }}-conda-${{ hashFiles('environment.yml') }}
+        restore-keys: |
+          ${{ runner.os }}-conda-
+
     - name: Install Miniconda
-      uses: conda-incubator/setup-miniconda@v2
+      uses: conda-incubator/setup-miniconda@v3 # Updated to the latest version
       with:
         python-version: 3.8
         activate-environment: wine_example_env
-        environment-file: conda_env.yaml
+        environment-file: environment.yml
         auto-update-conda: true
 
     - name: Verify conda installation
