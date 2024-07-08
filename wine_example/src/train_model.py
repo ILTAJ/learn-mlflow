@@ -68,45 +68,36 @@ def evaluate_model(data: dict, prediction):
     }
     return metrics
 
-def store_model(params: dict, metrics: dict, model: ElasticNet, target):
-    """Assumes alpha, l1_ratio, rmse, mae, and r2 are floats
-       Assumes model is a sklearn estimator"""
-    print("Elasticnet model (alpha=%f, l1_ratio=%f):" % (params['alpha'], params['l1_ratio']))
-    print("  RMSE: %s" % metrics['rmse'])
-    print("  MAE: %s" % metrics['mae'])
-    print("  R2: %s" % metrics['r2'])
-
-
-    mlflow.log_param("alpha", params['alpha'])
-    mlflow.log_param("l1_ratio", params['l1_ratio'])
-    mlflow.log_param("target_var", target)
-    mlflow.log_metric("rmse", metrics['rmse'])
-    mlflow.log_metric("r2", metrics['r2'])
-    mlflow.log_metric("mae", metrics['mae'])
-
-    tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
-
-    # Model registry does not work with file store
-    if tracking_url_type_store != "file":
-
-        # Register the model
-        # There are other ways to use the Model Registry, which depends on the use case,
-        # please refer to the doc for more information:
-        # https://mlflow.org/docs/latest/model-registry.html#api-workflow
-        mlflow.sklearn.log_model(model, "model", registered_model_name="ElasticnetWineModel")
-    else:
-        mlflow.sklearn.log_model(model, "model")
-
 def train():
+    print(f"Starting MLflow run with tracking URI: {mlflow.get_tracking_uri()}")
     mlflow.start_run()
-    df = ingest_data()
-    data = split_data(df, TARGET_VAR)
-    clf = train_model(data)
-    predictions = get_prediction(data, clf)
-    metrics = evaluate_model(data, predictions)
-    store_model(TRAINING_PARAMS, metrics, clf, TARGET_VAR)
-    mlflow.end_run()
+    try:
+        df = ingest_data()
+        data = split_data(df, TARGET_VAR)
+        model = train_model(data)
+        predictions = model.predict(data["test_x"])
+        (rmse, mae, r2) = eval_metrics(data["test_y"], predictions)
 
+        print(f"ElasticNet model (alpha={TRAINING_PARAMS['alpha']}, l1_ratio={TRAINING_PARAMS['l1_ratio']}):")
+        print(f"  RMSE: {rmse}")
+        print(f"  MAE: {mae}")
+        print(f"  R2: {r2}")
+
+        mlflow.log_param("alpha", TRAINING_PARAMS['alpha'])
+        mlflow.log_param("l1_ratio", TRAINING_PARAMS['l1_ratio'])
+        mlflow.log_param("target_var", TARGET_VAR)
+        mlflow.log_metric("rmse", rmse)
+        mlflow.log_metric("mae", mae)
+        mlflow.log_metric("r2", r2)
+
+        tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
+        if tracking_url_type_store != "file":
+            mlflow.sklearn.log_model(model, "model", registered_model_name="ElasticNetWineModel")
+        else:
+            mlflow.sklearn.log_model(model, "model")
+    finally:
+        mlflow.end_run()
+        print("MLflow run ended.")
 
 if __name__ == "__main__":
     train()
