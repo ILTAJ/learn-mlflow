@@ -45,7 +45,7 @@ jobs:
       run: conda info
 
     - name: Set MLflow tracking URI
-      run: echo "MLFLOW_TRACKING_URI=http:// 10.6.7.22:5000" >> $GITHUB_ENV
+      run: echo "MLFLOW_TRACKING_URI=http://10.6.7.22:5000" >> $GITHUB_ENV
 
     - name: Activate conda environment and run MLFlow
       run: |
