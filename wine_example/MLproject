@@ -4,9 +4,9 @@ conda_env: environment.yml
 
 entry_points:
   main:
-    parameters:
-      alpha: {type: float, default: 0.9}
-      l1_ratio: {type: float, default: 0.8}
-      target_var: {type: str, default: "quality"}
-    command: "python sklearn_train.py {alpha} {l1_ratio} {target_var}"
-    # command: "python src/run.py"
+    # parameters:
+    #   alpha: {type: float, default: 0.9}
+    #   l1_ratio: {type: float, default: 0.8}
+    #   target_var: {type: str, default: "quality"}
+    # command: "python sklearn_train.py {alpha} {l1_ratio} {target_var}"
+    command: "python src/run.py"
