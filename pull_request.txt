@@ -6,4 +6,4 @@
 
 # Last run to check mlflow ui at the same time
 
-# verification of the tracking of the uri. 
+# verification of the tracking of the uri 10.6.7.22:5000
