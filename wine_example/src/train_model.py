@@ -100,4 +100,6 @@ def train():
         print("MLflow run ended.")
 
 if __name__ == "__main__":
+    # Set the MLflow tracking URI to the server
+    mlflow.set_tracking_uri("http://10.6.7.22:5000")
     train()
