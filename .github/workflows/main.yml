@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
 
 env:
   CSV_URL: "http://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv"
@@ -21,15 +18,15 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4 # Updated to the latest version
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4 # Updated to the latest version
+      uses: actions/setup-python@v4
       with:
         python-version: 3.8
 
     - name: Cache conda packages
-      uses: actions/cache@v3 # Using the latest version
+      uses: actions/cache@v3
       with:
         path: ~/.conda/envs/venv
         key: ${{ runner.os }}-conda-${{ hashFiles('wine_example/environment.yml') }}
@@ -37,7 +34,7 @@ jobs:
           ${{ runner.os }}-conda-
 
     - name: Install Miniconda
-      uses: conda-incubator/setup-miniconda@v3 # Updated to the latest version
+      uses: conda-incubator/setup-miniconda@v3
       with:
         python-version: 3.8
         activate-environment: venv
@@ -47,9 +44,9 @@ jobs:
     - name: Verify conda installation
       run: conda info
 
-    - name: Run MLFlow
-      shell: bash -l {0}
+    - name: Activate conda environment and run MLFlow
       run: |
         source /usr/share/miniconda/etc/profile.d/conda.sh
         conda activate venv
         mlflow run wine_example
+      shell: bash -l {0}
